@@ -31,24 +31,24 @@ func main() {
 
 	r := chi.NewRouter()
 	/* MIDDLEWARE STACK ------------------------------------------------------- */
-	// r.Use(middleware.Logger)
+	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
 	/* CATEGORY ROUTES -------------------------------------------------------- */
-	r.Get("/category/all", webCategoryHandler.GetCategories)
+	r.Get("/category", webCategoryHandler.GetCategories)
 	r.Get("/category/{id}", webCategoryHandler.GetCategory)
 	r.Post("/category", webCategoryHandler.CreateCategory)
 
 	/* PRODUCT ROUTES --------------------------------------------------------- */
-	r.Get("/product/all", webProductHandler.GetProducts)
 	r.Get("/product/{id}", webProductHandler.GetProduct)
-	r.Get("/product/{categoryID}", webProductHandler.GetProductsByCategoryId)
+	r.Get("/product", webProductHandler.GetProducts)
+	r.Get("/product/category/{categoryID}", webProductHandler.GetProductsByCategoryId)
 	r.Post("/product", webProductHandler.CreateProduct)
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("go-api version 1.0"))
 	})
 
-	http.ListenAndServe(":8888", r)
 	fmt.Println("·•.▪▐ SERVER IS UP AND RUNNING ON PORT 8888 ▐ ▪.•·")
+	http.ListenAndServe(":8888", r)
 }

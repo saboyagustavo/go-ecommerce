@@ -18,7 +18,7 @@ func (ps *ProductService) GetProduct(id string) (*entity.Product, error) {
 	if err != nil {
 		return nil, err
 	}
-	return product, nil
+	return product, err
 }
 func (ps *ProductService) GetProducts() ([]*entity.Product, error) {
 	products, err := ps.ProductDB.GetProducts()
