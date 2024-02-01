@@ -1,0 +1,38 @@
+version: "3"
+services:
+  database:
+    image: mysql:8.3
+    container_name: database
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=go-api-db
+    ports: 
+      - "3306:3306"
+    volumes:
+      - .docker/mysql:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+    networks:
+      - go-ecommmerce-network
+  
+  adminer:
+    container_name: adminer
+    image: adminer:4.8.1
+    restart: always
+    ports: 
+      - "8080:8080"
+    networks:
+      - go-ecommmerce-network
+    depends_on:
+      database:
+        condition: service_healthy
+
+networks:
+  go-ecommmerce-network:
+    driver: bridge
+

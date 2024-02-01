@@ -17,7 +17,7 @@ func NewWebProductHandler(productService *service.ProductService) *WebProductHan
 	return &WebProductHandler{ProductService: productService}
 }
 
-func (wph WebProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
+func (wph *WebProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	if id == "" {
 		http.Error(w, "product id is required", http.StatusBadRequest)
@@ -33,7 +33,7 @@ func (wph WebProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) 
 	json.NewEncoder(w).Encode(product)
 }
 
-func (wph WebProductHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
+func (wph *WebProductHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 	products, err := wph.ProductService.GetProducts()
 
 	if err != nil {
@@ -44,7 +44,7 @@ func (wph WebProductHandler) GetProducts(w http.ResponseWriter, r *http.Request)
 	json.NewEncoder(w).Encode(products)
 }
 
-func (wph WebProductHandler) GetProductsByCategoryId(w http.ResponseWriter, r *http.Request) {
+func (wph *WebProductHandler) GetProductsByCategoryId(w http.ResponseWriter, r *http.Request) {
 	categoryID := chi.URLParam(r, "categoryID")
 	if categoryID == "" {
 		http.Error(w, "categoryID is required", http.StatusBadRequest)
@@ -60,7 +60,7 @@ func (wph WebProductHandler) GetProductsByCategoryId(w http.ResponseWriter, r *h
 	json.NewEncoder(w).Encode(products)
 }
 
-func (wph WebProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
+func (wph *WebProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	var product entity.Product
 
 	err := json.NewDecoder(r.Body).Decode(&product)
@@ -70,7 +70,7 @@ func (wph WebProductHandler) CreateProduct(w http.ResponseWriter, r *http.Reques
 
 	result, err := wph.ProductService.CreateProduct(
 		product.Name,
-		product.Descritption,
+		product.Description,
 		product.CategoryID,
 		product.ImageURL,
 		product.Price,

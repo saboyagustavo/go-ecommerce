@@ -39,6 +39,7 @@ func (wch *WebCategoryHandler) GetCategory(w http.ResponseWriter, r *http.Reques
 	category, err := wch.CategoryService.GetCategory(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	json.NewEncoder(w).Encode(category)
@@ -50,11 +51,13 @@ func (wch *WebCategoryHandler) CreateCategory(w http.ResponseWriter, r *http.Req
 	err := json.NewDecoder(r.Body).Decode(&category)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	result, err := wch.CategoryService.CreateCategory(category.Name)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	json.NewEncoder(w).Encode(result)
