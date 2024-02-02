@@ -5,10 +5,11 @@ import { ProductsModule } from './products/products.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './products/entities/product.entity';
 import { OrdersModule } from './orders/orders.module';
+import { Order } from './orders/entities/order.entity';
+import { OrderItem } from './orders/entities/order-item.entity';
 
 @Module({
   imports: [
-    ProductsModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -16,10 +17,11 @@ import { OrdersModule } from './orders/orders.module';
       username: 'root',
       password: 'root',
       database: 'nest-api-db',
-      entities: [Product],
+      entities: [Product, Order, OrderItem],
       synchronize: true,
       logging: true,
     }),
+    ProductsModule,
     OrdersModule,
   ],
   controllers: [AppController],

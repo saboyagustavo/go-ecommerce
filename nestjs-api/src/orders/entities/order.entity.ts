@@ -13,7 +13,7 @@ export enum OrderStatus {
   FAILED = 'failed',
 }
 
-@Entity()
+@Entity({ name: 'orders' })
 export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
