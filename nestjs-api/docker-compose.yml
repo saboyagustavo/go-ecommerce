@@ -1,0 +1,34 @@
+version: "3"
+services:
+  db:
+    image: mysql:8.0.30-debian
+    ports: 
+      - 3307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=nest-api-db
+    volumes:
+      - .docker/mysql:/var/lib/mysql
+    networks:
+      - nest-api-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+
+  adminer:
+    container_name: adminer
+    image: adminer:4.8.1
+    restart: always
+    ports: 
+      - "8081:8080"
+    networks:
+      - nest-api-network
+    depends_on:
+      db:
+        condition: service_healthy
+
+networks:
+  nest-api-network:
+    driver: bridge
