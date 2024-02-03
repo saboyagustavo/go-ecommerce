@@ -13,6 +13,15 @@ export enum OrderStatus {
   FAILED = 'failed',
 }
 
+type CreateOrderCommand = {
+  client_id: string;
+  items: {
+    product_id: string;
+    quantity: number;
+    price: number;
+  }[];
+};
+
 @Entity({ name: 'orders' })
 export class Order {
   @PrimaryGeneratedColumn('uuid')
@@ -35,4 +44,24 @@ export class Order {
     eager: true,
   })
   items: OrderItem[];
+
+  static create(input: CreateOrderCommand) {
+    const order = new Order();
+
+    order.client_id = input.client_id;
+
+    order.items = input.items.map((item) => {
+      const orderItem = new OrderItem();
+      orderItem.product_id = item.product_id;
+      orderItem.quantity = item.quantity;
+      orderItem.price = item.price;
+      return orderItem;
+    });
+
+    order.total = order.items.reduce((acc, curr) => {
+      return acc + curr.price * curr.quantity;
+    }, 0);
+
+    return order;
+  }
 }
