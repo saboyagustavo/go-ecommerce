@@ -5,7 +5,7 @@ export const config = (): ConfigProps => ({
     port: parseInt(process.env.API_PORT),
     url: process.env.API_URL,
     httpTimeout: parseInt(process.env.API_HTTP_TIMEOUT),
-    key: process.env.API_KEY,
+    key: process.env.API_JWT_KEY,
   },
   db: {
     type: 'mysql',

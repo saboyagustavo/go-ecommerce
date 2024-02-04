@@ -4,33 +4,31 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private userRepo: Repository<User>) {}
-  private cleansedResult(u: User) {
-    return plainToClass(User, u);
-  }
 
   async create(createUserDto: CreateUserDto) {
     const user = this.userRepo.create(createUserDto);
-    const savedUser = await this.userRepo.save(user);
-    return this.cleansedResult(savedUser);
+    return this.userRepo.save(user);
   }
 
   async findAll() {
-    const users = await this.userRepo.find();
-    return users.map((user) => this.cleansedResult(user));
+    return this.userRepo.find();
   }
 
   async findOne(id: string) {
-    const user = await this.userRepo.findOneByOrFail({ id });
-    return this.cleansedResult(user);
+    return this.userRepo.findOneByOrFail({ id });
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return this.userRepo.update({ id }, updateUserDto);
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.userRepo.findOneByOrFail({ id });
+    const toSaveUser = this.userRepo.create({
+      ...user,
+      ...updateUserDto,
+    });
+    return await this.userRepo.save(toSaveUser);
   }
 
   remove(id: string) {

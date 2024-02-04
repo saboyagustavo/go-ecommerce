@@ -1,0 +1,20 @@
+[
+  {
+    "name": "superadmin",
+    "email": "superadmin@email.com",
+    "password": "$2b$10$XfCdK7RSz5DCGLd0LdH1D.d8cPJ9XE5Dg.hiXDwgRkZxdtWT98Z0C",
+    "role": "super-admin"
+  },
+  {
+	  "name": "admin",
+	  "email": "admin@email.com",
+	  "password": "$2b$10$XfCdK7RSz5DCGLd0LdH1D.d8cPJ9XE5Dg.hiXDwgRkZxdtWT98Z0C",
+    "role": "admin"
+  },
+  {
+	  "name": "user",
+	  "email": "user@email.com",
+	  "password": "$2b$10$XfCdK7RSz5DCGLd0LdH1D.d8cPJ9XE5Dg.hiXDwgRkZxdtWT98Z0C",
+    "role": "user"
+  }
+]

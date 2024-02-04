@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { getDataSourceToken } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import products from './db/products.json';
+import users from './db/users.json';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +14,9 @@ async function bootstrap() {
 
   const productsRepo = dataSource.getRepository('Product');
   await productsRepo.save(products);
+
+  const usersRepo = dataSource.getRepository('User');
+  await usersRepo.save(users);
 
   await app.close();
 }
