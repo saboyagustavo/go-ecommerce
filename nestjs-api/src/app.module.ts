@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ProductsModule } from './products/products.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProductsModule } from './products/products.module';
 import { Product } from './products/entities/product.entity';
 import { OrdersModule } from './orders/orders.module';
 import { Order } from './orders/entities/order.entity';
 import { OrderItem } from './orders/entities/order-item.entity';
+import { UsersModule } from './users/users.module';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -17,12 +19,13 @@ import { OrderItem } from './orders/entities/order-item.entity';
       username: 'root',
       password: 'root',
       database: 'nest-api-db',
-      entities: [Product, Order, OrderItem],
+      entities: [Product, Order, OrderItem, User],
       synchronize: true,
       logging: true,
     }),
     ProductsModule,
     OrdersModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

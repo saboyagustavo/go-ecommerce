@@ -2,10 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { OrderItem } from './order-item.entity';
+import { User } from '../../users/entities/user.entity';
+import { Transform } from 'class-transformer';
 
 export enum OrderStatus {
   PENDING = 'pending',
@@ -32,6 +36,11 @@ export class Order {
 
   @Column()
   client_id: string;
+
+  @Transform(({ value }) => ({ id: value.id, name: value.name }))
+  @ManyToOne(() => User, { eager: true })
+  @JoinColumn({ name: 'client_id' })
+  user: User;
 
   @Column()
   status: OrderStatus = OrderStatus.PENDING;
