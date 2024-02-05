@@ -1,37 +1,39 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../users/entities/user.entity';
-import { Repository } from 'typeorm';
-import { JwtService } from '@nestjs/jwt';
-import { AuthEntity } from './entities/auth.entity';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { SessionData } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User) private userRepo: Repository<User>,
+    private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
 
-  async login(email: string, password: string): Promise<AuthEntity> {
-    const user = await this.userRepo.findOneBy({ email });
+  async validateUser(email: string, pass: string): Promise<SessionData> {
+    const user = await this.usersService.findByEmail(email);
 
     if (!user) {
-      throw new NotFoundException(`No user found for email: ${email}`);
+      throw new UnauthorizedException();
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const validPassword = await bcrypt.compare(pass, user.password);
 
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid password');
+    if (!validPassword) {
+      throw new UnauthorizedException('senha errada');
     }
 
+    return { userId: user.id, username: user.name };
+  }
+
+  async login(sessionData: SessionData) {
     return {
-      accessToken: this.jwtService.sign({ userId: user.id }),
+      access_token: this.jwtService.sign(sessionData),
     };
+  }
+
+  decodeToken(token: string) {
+    return this.jwtService.decode(token);
   }
 }

@@ -12,8 +12,7 @@ export class OrdersService {
     @InjectRepository(Product) private productRepo: Repository<Product>,
   ) {}
 
-  async create(createOrderDto: CreateOrderDto) {
-    const client_id = '1';
+  async create(createOrderDto: CreateOrderDto & { client_id: string }) {
     const orderItemDto = createOrderDto.items;
 
     const productIds = orderItemDto.map((item) => item.product_id);
@@ -42,7 +41,7 @@ export class OrdersService {
     });
 
     const order = Order.create({
-      client_id,
+      client_id: createOrderDto.client_id,
       items,
     });
 

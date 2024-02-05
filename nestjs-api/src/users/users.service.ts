@@ -22,6 +22,10 @@ export class UsersService {
     return this.userRepo.findOneByOrFail({ id });
   }
 
+  async findByEmail(email: string) {
+    return this.userRepo.findOneByOrFail({ email });
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.userRepo.findOneByOrFail({ id });
     const toSaveUser = this.userRepo.create({
