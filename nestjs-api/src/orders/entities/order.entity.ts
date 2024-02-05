@@ -10,6 +10,7 @@ import {
 import { OrderItem } from './order-item.entity';
 import { User } from '../../users/entities/user.entity';
 import { Transform } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 export enum OrderStatus {
   PENDING = 'pending',
@@ -28,26 +29,34 @@ type CreateOrderCommand = {
 
 @Entity({ name: 'orders' })
 export class Order {
+  @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @ApiProperty()
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   total: number;
 
+  @ApiProperty()
   @Column()
   client_id: string;
 
+  @ApiProperty({ type: () => User })
   @Transform(({ value }) => ({ id: value.id, name: value.name }))
   @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'client_id' })
   user: User;
 
+  @ApiProperty({ enum: OrderStatus })
   @Column()
   status: OrderStatus = OrderStatus.PENDING;
 
+  @ApiProperty()
   @CreateDateColumn()
   created_at: Date;
 
+  @ApiProperty({ type: () => OrderItem, isArray: true })
+  @ApiProperty()
   @OneToMany(() => OrderItem, (item) => item.order, {
     cascade: ['insert'],
     eager: true,

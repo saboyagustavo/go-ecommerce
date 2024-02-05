@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 export enum UserRole {
   USER = 'user',
@@ -19,11 +20,15 @@ export enum UserRole {
 
 @Entity({ name: 'users' })
 export class User {
+  @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @ApiProperty()
   @Column()
   name: string;
 
+  @ApiProperty()
   @Column({ unique: true })
   email: string;
 
@@ -31,13 +36,16 @@ export class User {
   @Column()
   password: string;
 
+  @ApiProperty()
   @CreateDateColumn()
   created_at: Date;
 
+  @ApiProperty({ enum: UserRole })
   @Exclude({ toPlainOnly: true })
   @Column()
   role: UserRole = UserRole.USER;
 
+  @ApiProperty({ type: () => Order })
   @OneToMany(() => Order, (order) => order.user, { lazy: true })
   orders: Promise<Order[]>;
 

@@ -48,11 +48,21 @@ export class OrdersService {
     return await this.orderRepo.save(order);
   }
 
-  findAll() {
-    return `This action returns all orders`;
+  findAll(client_id: string) {
+    return this.orderRepo.find({
+      where: {
+        client_id,
+      },
+      order: {
+        created_at: 'DESC',
+      },
+    });
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} order`;
+  findOne(id: string, client_id: string) {
+    return this.orderRepo.findOneByOrFail({
+      id,
+      client_id,
+    });
   }
 }

@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { SessionData } from './dto/auth.dto';
+import { SessionData, SignInResponse } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,13 +21,13 @@ export class AuthService {
     const validPassword = await bcrypt.compare(pass, user.password);
 
     if (!validPassword) {
-      throw new UnauthorizedException('senha errada');
+      throw new UnauthorizedException();
     }
 
     return { userId: user.id, username: user.name };
   }
 
-  async login(sessionData: SessionData) {
+  async login(sessionData: SessionData): Promise<SignInResponse> {
     return {
       access_token: this.jwtService.sign(sessionData),
     };
