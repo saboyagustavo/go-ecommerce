@@ -5,9 +5,8 @@ services:
     image: mysql:8.0.30-debian
     ports: 
       - 3307:3306
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=nest-api-db
+    env_file:
+      - ./.env
     volumes:
       - .docker/mysql:/var/lib/mysql
     networks:
@@ -30,6 +29,16 @@ services:
       db:
         condition: service_healthy
 
+  rabbitmq:
+    image: rabbitmq:3.12.12-management
+    ports:
+      - 15672:15672
+      - 5672:5672
+    env_file:
+      - ./.env
+    networks:
+      - nest-api-network
+  
 networks:
   nest-api-network:
     driver: bridge

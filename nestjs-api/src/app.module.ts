@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
+import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AuthInterceptor } from './interceptor/auth.interceptor';
     OrdersModule,
     UsersModule,
     AuthModule,
+    RabbitmqModule,
   ],
   controllers: [],
   providers: [

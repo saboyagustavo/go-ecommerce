@@ -13,7 +13,16 @@ interface DbConfigProps extends MysqlConnectionOptions {
   };
 }
 
+interface RabbitMQConfigProps {
+  host: string;
+  port: number;
+  user: string;
+  password: string;
+  url: string;
+}
+
 export interface ConfigProps {
   api: ApiConfigProps;
   db: DbConfigProps;
+  rabbitmq: RabbitMQConfigProps;
 }
