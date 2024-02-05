@@ -63,17 +63,17 @@ export function UserMenu(props: UserMenuProps) {
 			>
 				<MenuItem onClick={redirectToCart}>
 					<CartIcon />
-					<Typography>Meu carrinho</Typography>
+					<Typography>Cart</Typography>
 				</MenuItem>
 
 				<MenuItem onClick={redirectToMyOrders}>
 					<ListAltIcon />
-					<Typography>Meus pedidos</Typography>
+					<Typography>Orders</Typography>
 				</MenuItem>
 				
         <MenuItem onClick={handleLogout}>
 					<LogoutIcon />
-					<Typography>Sair</Typography>
+					<Typography>Logout</Typography>
 				</MenuItem>
 			</Menu>
 		</>
