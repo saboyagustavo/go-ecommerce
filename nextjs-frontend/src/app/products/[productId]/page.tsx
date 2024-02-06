@@ -20,12 +20,12 @@ function ProductDetailPage({ params }: { params: { productId: string } }) {
 				<Image
 					src={product.image_url}
 					layout='fill'
-					objectFit='cover'
+					style={{ objectFit: 'cover' }}
 					priority
 					alt={product.name}
 				/>
 			</Grid2>
-      
+
 			<Grid2 xs={12} md={5}>
 				<Typography variant='h4'>{product.name}</Typography>
 				<Box
