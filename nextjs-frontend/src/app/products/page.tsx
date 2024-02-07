@@ -7,10 +7,10 @@ import {
   Typography,
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Link from "next/link";
 import Image from "next/legacy/image";
 import { Product } from "../../models";
+import { ListAltOutlined } from "@mui/icons-material";
 
 const products: Product[] = [
   {
@@ -89,8 +89,8 @@ function ListProductsPage() {
                 href={`/products/${product.id}`}
                 style={{ textDecoration: "none" }}
               >
-                <Button size="small" startIcon={<ShoppingCartIcon />}>
-                  Comprar
+                <Button size="small" startIcon={<ListAltOutlined />}>
+                  Details
                 </Button>
               </Link>
             </CardActions>
