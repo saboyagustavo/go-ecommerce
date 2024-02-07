@@ -16,13 +16,13 @@ import { ListAltOutlined } from "@mui/icons-material";
 async function ListProductsPage() {
   let products: Product[] | undefined;
   try {
-    const response = await fetch(`${process.env.PRODUCTS_API_URL}/product`);
+    const response = await fetch(`${process.env.PRODUCTS_API_URL}/product`, {
+      next: { revalidate: 30 }
+    });
     if (!response.ok) {
       throw new Error('Failed to fetch products');
     }
-
-    const data = await response.json();
-    products = data;
+    products = await response.json();
   } catch (error) {
     console.error('Error fetching products:', error);
   }

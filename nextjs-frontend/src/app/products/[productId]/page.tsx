@@ -4,15 +4,13 @@ import Image from 'next/image';
 import { LocalOffer as OfferIcon, Description as DescIcon } from '@mui/icons-material';
 import { ProductQuantityForm } from './ProductQuantityForm';
 
-function ProductDetailPage({ params }: { params: { productId: string } }) {
-	const product = {
-		id: '0product-1random-2uuid-3generated',
-		name: 'Some product',
-		description: 'Some product description',
-		price: 175,
-		image_url: 'https://source.unsplash.com/random?product',
-		category_id: '0category-1random-2uuid-3generated',
-	};
+async function ProductDetailPage({ params }: { params: { productId: string } }) {
+	const productId = params.productId;
+	const product = await fetch(`${process.env.PRODUCTS_API_URL}/product/${productId}`, {
+		next: {revalidate: 30}
+	}).then(data =>
+		data.json()
+	);
 
 	return (
 		<Grid2 container spacing={2}>
