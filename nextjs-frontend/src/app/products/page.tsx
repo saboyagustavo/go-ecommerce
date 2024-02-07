@@ -6,48 +6,36 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
-import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
+import Grid2 from "@mui/material/Unstable_Grid2";
 import Link from "next/link";
 import Image from "next/legacy/image";
 import { Product } from "../../models";
 import { ListAltOutlined } from "@mui/icons-material";
 
-const products: Product[] = [
-  {
-    id: "0product-1random-2uuid-3generated",
-    name: "Some product",
-    description: "Some product description",
-    price: 175,
-    image_url: "https://source.unsplash.com/random?product",
-    category_id: "0category-1random-2uuid-3generated",
-  },
-  {
-    id: "1product-2random-3uuid-4generated",
-    name: "Some product",
-    description: "Some product description",
-    price: 985,
-    image_url: "https://source.unsplash.com/random?product",
-    category_id: "1category-2random-3uuid-4generated",
-  },
-  {
-    id: "2product-3random-4uuid-5generated",
-    name: "Some product",
-    description: "Some product description",
-    price: 1099,
-    image_url: "https://source.unsplash.com/random?product",
-    category_id: "2category-3random-4uuid-5generated",
-  },
-];
 
-function ListProductsPage() {
+async function ListProductsPage() {
+  let products: Product[] | undefined;
+  try {
+    const response = await fetch(`${process.env.PRODUCTS_API_URL}/product`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch products');
+    }
+
+    const data = await response.json();
+    products = data;
+  } catch (error) {
+    console.error('Error fetching products:', error);
+  }
+
+  
   return (
     <Grid2 container spacing={2}>
-      {products.length === 0 && (
+      {products?.length === 0 && (
         <Grid2 xs={12} sx={{ display: "flex", justifyContent: "center" }}>
           <Typography variant="h5">No products found</Typography>
         </Grid2>
       )}
-      {products.map((product, key) => (
+      {products?.map((product: any, key: any) => (
         <Grid2 xs={12} sm={6} md={4} key={key}>
           <Card
             sx={{ height: "100%", display: "flex", flexDirection: "column" }}

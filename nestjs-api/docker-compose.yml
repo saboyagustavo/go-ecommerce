@@ -9,25 +9,11 @@ services:
       - ./.env
     volumes:
       - .docker/mysql:/var/lib/mysql
-    networks:
-      - nest-api-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
       interval: 10s
       timeout: 60s
       retries: 5
-
-  adminer:
-    container_name: adminer
-    image: adminer:4.8.1
-    restart: always
-    ports: 
-      - "8081:8080"
-    networks:
-      - nest-api-network
-    depends_on:
-      db:
-        condition: service_healthy
 
   rabbitmq:
     image: rabbitmq:3.12.12-management
@@ -36,9 +22,3 @@ services:
       - 5672:5672
     env_file:
       - ./.env
-    networks:
-      - nest-api-network
-  
-networks:
-  nest-api-network:
-    driver: bridge

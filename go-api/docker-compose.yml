@@ -1,7 +1,7 @@
 version: "3"
 services:
   database:
-    image: mysql:8.3
+    image: mysql:8.0.30-debian
     container_name: database
     restart: always
     environment:
@@ -17,8 +17,6 @@ services:
       interval: 10s
       timeout: 30s
       retries: 5
-    networks:
-      - go-ecommmerce-network
   
   adminer:
     container_name: adminer
@@ -26,13 +24,7 @@ services:
     restart: always
     ports: 
       - "8080:8080"
-    networks:
-      - go-ecommmerce-network
     depends_on:
       database:
         condition: service_healthy
-
-networks:
-  go-ecommmerce-network:
-    driver: bridge
 
