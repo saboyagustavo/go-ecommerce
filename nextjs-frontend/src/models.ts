@@ -32,3 +32,10 @@ export type OrderItem = {
   price: number;
   product: Product;
 };
+
+export type User = {
+  username: string;
+  userId: string;
+  exp: Date;
+  iat: Date;
+}

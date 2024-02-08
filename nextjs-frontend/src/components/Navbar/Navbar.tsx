@@ -5,8 +5,10 @@ import Image from 'next/legacy/image';
 import { Home as HomeIcon, ShoppingCart as CartIcon } from '@mui/icons-material';
 import { SelectCategory } from './SelectCategory';
 import { SearchBar } from './SearchBar';
+import { AuthService } from '@/services/auth.service';
 
 export async function Navbar() {
+	const user = new AuthService().getUser();
 	return (
 		<AppBar position='fixed'>
 			<Toolbar sx={{ backgroundColor: 'background.paper' }}>
@@ -20,7 +22,7 @@ export async function Navbar() {
 					<CartIcon />
 				</IconButton>
 
-				<UserMenu user={{}} />
+				<UserMenu user={user} />
 			</Toolbar>
 
 			<Toolbar

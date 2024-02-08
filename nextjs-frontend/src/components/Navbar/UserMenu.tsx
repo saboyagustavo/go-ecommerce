@@ -10,12 +10,11 @@ import {
 	ListAlt as ListAltIcon,
 } from '@mui/icons-material';
 import Link from 'next/link';
+import { logoutAction } from '@/server-actions/auth.action';
+import { User } from '@/models';
 
-export type UserMenuProps = {
-	user: any | null;
-};
 
-export function UserMenu(props: UserMenuProps) {
+export function UserMenu({ user }: { user: User | null }) {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const router = useRouter();
 
@@ -38,10 +37,11 @@ export function UserMenu(props: UserMenuProps) {
 	};
 
 	const handleLogout = async () => {
+		await logoutAction();
 		handleClose();
 	};
 
-	return props.user ? (
+	return user ? (
 		<>
 			<IconButton size='large' onClick={handleMenu}>
 				<AccountIcon />
@@ -80,7 +80,7 @@ export function UserMenu(props: UserMenuProps) {
 	) : (
 		<Link href={'/login'} style={{ textDecoration: 'none' }}>
 			<Typography color='text.primary' sx={{ ml: 3, fontWeight: 500 }}>
-				Entrar
+				Sign In
 			</Typography>
 		</Link>
 	);

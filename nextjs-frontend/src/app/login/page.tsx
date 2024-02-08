@@ -1,13 +1,18 @@
 import { LockOutlined as LockIcon } from '@mui/icons-material';
 import { Avatar, Box, Button, TextField, Typography } from '@mui/material';
+import { AuthService } from '@/services/auth.service';
+import { loginAction } from '@/server-actions/auth.action';
+import { redirect } from 'next/navigation';
 
 function LoginPage({ searchParams }: { searchParams: { redirect_to?: string } }) {
 	const { redirect_to = '/products' } = searchParams;
-	const user = {
-		id: 'fake_id_123',
-		name: 'Fake Faker',
-	};
-
+	const authService = new AuthService();
+	const user = authService.getUser();
+  
+	if (user && !authService.isTokenExpired()) {
+    redirect(redirect_to);
+  }
+	
 	return (
 		<Box
 			sx={{
@@ -25,7 +30,7 @@ function LoginPage({ searchParams }: { searchParams: { redirect_to?: string } })
         Sign in to your account
 			</Typography>
 
-			<Box component='form' noValidate sx={{ mt: 1 }}>
+			<Box component='form' noValidate sx={{ mt: 1 }} action={loginAction}>
 				<input type='hidden' name='redirect_to' value={redirect_to} />
 				<TextField
 					margin='normal'
@@ -35,7 +40,7 @@ function LoginPage({ searchParams }: { searchParams: { redirect_to?: string } })
 					name='email'
 					type='email'
 					autoComplete='email'
-					defaultValue='admin@example.com'
+					defaultValue='admin@email.com'
 					placeholder='example@example.com'
 					autoFocus
 				/>
