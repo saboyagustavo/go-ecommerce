@@ -8,10 +8,7 @@ import { useSearchParams } from "next/navigation";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: grey[400],
-  "&:hover": {
-    backgroundColor: grey[500],
-  },
+  backgroundColor: grey[300],
   marginLeft: 0,
   width: "100%",
   [theme.breakpoints.up("sm")]: {
@@ -46,7 +43,7 @@ export function SearchBar() {
   const searchParams = useSearchParams();
   
   return (
-    <Search>
+    <Search sx={{ width: 480}}>
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>

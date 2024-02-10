@@ -13,7 +13,6 @@ import Link from 'next/link';
 import { logoutAction } from '@/server-actions/auth.action';
 import { User } from '@/models';
 
-
 export function UserMenu({ user }: { user: User | null }) {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const router = useRouter();
@@ -78,10 +77,10 @@ export function UserMenu({ user }: { user: User | null }) {
 			</Menu>
 		</>
 	) : (
-		<Link href={'/login'} style={{ textDecoration: 'none' }}>
-			<Typography color='text.primary' sx={{ ml: 3, fontWeight: 500 }}>
+		<IconButton LinkComponent={Link} href={'/login'} sx={{ borderRadius: 12, textDecoration: 'none' }}>
+			<Typography color='text.primary' sx={{ mx: 2, fontWeight: 500 }}>
 				Sign In
 			</Typography>
-		</Link>
+		</IconButton>
 	);
 }
