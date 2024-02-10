@@ -9,24 +9,19 @@ import {
 import Grid2 from "@mui/material/Unstable_Grid2";
 import Link from "next/link";
 import Image from "next/legacy/image";
-import { Product } from "../../models";
 import { ListAltOutlined } from "@mui/icons-material";
+import { ProductService } from "@/services/product.service";
 
-
-async function ListProductsPage() {
-  let products: Product[] | undefined;
-  try {
-    const response = await fetch(`${process.env.PRODUCTS_API_URL}/product`, {
-      next: { revalidate: 30 }
-    });
-    if (!response.ok) {
-      throw new Error('Failed to fetch products');
-    }
-    products = await response.json();
-  } catch (error) {
-    console.error('Error fetching products:', error);
-  }
-
+async function ListProductsPage({
+  searchParams,
+}: {
+  searchParams: { search?: string; category_id?: string };
+}) {
+  const productService = new ProductService();
+  const products = await productService.getProductsViaNextApi(
+    searchParams.search,
+    searchParams.category_id
+  );
   
   return (
     <Grid2 container spacing={2}>

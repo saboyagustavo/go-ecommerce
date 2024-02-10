@@ -3,14 +3,12 @@ import Grid2 from '@mui/material/Unstable_Grid2';
 import Image from 'next/image';
 import { LocalOffer as OfferIcon, Description as DescIcon } from '@mui/icons-material';
 import { ProductQuantityForm } from './ProductQuantityForm';
+import { ProductService } from '@/services/product.service';
 
 async function ProductDetailPage({ params }: { params: { productId: string } }) {
 	const productId = params.productId;
-	const product = await fetch(`${process.env.PRODUCTS_API_URL}/product/${productId}`, {
-		next: {revalidate: 30}
-	}).then(data =>
-		data.json()
-	);
+	const productService = new ProductService();
+	const product = await productService.getProduct(productId);
 
 	return (
 		<Grid2 container spacing={2}>
