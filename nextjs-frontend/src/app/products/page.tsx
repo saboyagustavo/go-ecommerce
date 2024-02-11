@@ -25,7 +25,7 @@ async function ListProductsPage({
   
   return (
     <Grid2 container spacing={2}>
-      {products?.length === 0 && (
+      {(!products || products?.length === 0) && (
         <Grid2 xs={12} sx={{ display: "flex", justifyContent: "center" }}>
           <Typography variant="h5">No products found</Typography>
         </Grid2>

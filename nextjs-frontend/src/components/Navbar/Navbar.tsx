@@ -1,4 +1,4 @@
-import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
+import { AppBar, IconButton, Toolbar } from '@mui/material';
 import { UserMenu } from './UserMenu';
 import Link from 'next/link';
 import Image from 'next/legacy/image';
@@ -7,8 +7,12 @@ import { SelectCategory } from './SelectCategory';
 import { SearchBar } from './SearchBar';
 import { AuthService } from '@/services/auth.service';
 import Grid2 from '@mui/material/Unstable_Grid2';
+import { CategoryService } from '@/services/category.service';
 
 export async function Navbar() {
+	const categoryService = new CategoryService();
+	const categories = await categoryService.getCategories();
+
 	const user = new AuthService().getUser();
 	return (
 		<AppBar position='fixed'>
@@ -22,7 +26,7 @@ export async function Navbar() {
 
 					<Grid2 xs={12} md={8} sx={{display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center'}}>
 						<SearchBar />
-						<SelectCategory categories={[]} />
+						<SelectCategory categories={categories} />
 					</Grid2>
 
 					<Grid2 xs={12} md={2} sx={{display: 'flex', alignItems: 'center', justifyContent: 'end'}}>
