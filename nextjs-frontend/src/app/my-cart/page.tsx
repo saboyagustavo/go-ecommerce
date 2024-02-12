@@ -26,8 +26,8 @@ async function CartPage() {
 
 	return (
 		<Box>
-			<Typography variant='h3'>
-				<CartIcon /> My cart
+			<Typography variant='h4'>
+				My cart
 			</Typography>
 			<Grid2 container>
 				<Grid2 xs={10} sm={7} md={4}>
@@ -86,13 +86,13 @@ async function CartPage() {
 							);
 						})}
 						{!cart.items.length && (
-							<ListItem>
+							<ListItem sx={{mt: 2}}>
 								<ListItemText>No products added to cart yet</ListItemText>
 							</ListItem>
 						)}
 					</List>
 
-					<Box sx={{ display: 'flex', justifyContent: 'start', mt: 5 }}>
+					<Box sx={{ display: 'flex', justifyContent: 'start', mt: 3 }}>
 						<Total total={cart.total} />
 					</Box>
 
