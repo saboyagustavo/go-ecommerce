@@ -1,5 +1,6 @@
 'use client';
 
+import { checkoutAction } from '@/server-actions/checkout.action';
 import { Paid as PaidIcon } from '@mui/icons-material';
 import { Box, Button, TextField } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
@@ -10,12 +11,7 @@ export function CheckoutForm() {
 	return (
 		<Box
 			component='form'
-			action={() =>
-				console.log(`
-        action1 - generate card hash\n
-        action2 - checkoutAction\n
-      `)
-			}
+			action={checkoutAction}
 		>
 			<input type='hidden' name='card_hash' value={card_hash_example} />
 
@@ -29,6 +25,8 @@ export function CheckoutForm() {
 						autoComplete='cc-name'
 						variant='standard'
 						placeholder='Name Printed N Lastname'
+						defaultValue='John Johnny Doe'
+						disabled
 					/>
 				</Grid2>
 
@@ -41,6 +39,8 @@ export function CheckoutForm() {
 						autoComplete='cc-number'
 						variant='standard'
 						placeholder='XXXX XXXX XXXX XXXX'
+						defaultValue='1234 5678 1234 5678'
+						disabled
 					/>
 				</Grid2>
 
@@ -53,6 +53,8 @@ export function CheckoutForm() {
 						autoComplete='cc-exp'
 						variant='standard'
 						placeholder='MM/YYYY'
+						defaultValue='12/2999'
+						disabled
 					/>
 				</Grid2>
 
@@ -63,6 +65,8 @@ export function CheckoutForm() {
 						label='CVV'
 						helperText='Card security code'
 						placeholder='XXX'
+						defaultValue='123'
+						disabled
 					/>
 				</Grid2>
 			</Grid2>

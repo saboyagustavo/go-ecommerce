@@ -1,6 +1,5 @@
-import { User } from '@/models';
 import { cookies } from 'next/headers';
-import { string } from 'yup';
+import { User } from '@/models';
 
 export class AuthService {
 	async login(input: { email: string; password: string }) {
@@ -65,7 +64,7 @@ export class AuthService {
       username,
       userId,
       exp: new Date(exp * 1000),
-      iat: new Date(exp * 1000),
+      iat: new Date(iat * 1000),
     };
 	}
 
