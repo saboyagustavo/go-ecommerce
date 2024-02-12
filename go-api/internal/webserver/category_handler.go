@@ -62,3 +62,14 @@ func (wch *WebCategoryHandler) CreateCategory(w http.ResponseWriter, r *http.Req
 
 	json.NewEncoder(w).Encode(result)
 }
+
+func (wch *WebCategoryHandler) GetRouter() http.Handler {
+	r := chi.NewRouter()
+
+	r.Get("/", wch.GetCategories)
+	r.Get("/{id}", wch.GetCategory)
+
+	r.Post("/", wch.CreateCategory)
+
+	return r
+}

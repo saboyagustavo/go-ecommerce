@@ -83,3 +83,15 @@ func (wph *WebProductHandler) CreateProduct(w http.ResponseWriter, r *http.Reque
 
 	json.NewEncoder(w).Encode(result)
 }
+
+func (wph *WebProductHandler) GetRouter() http.Handler {
+	r := chi.NewRouter()
+
+	r.Get("/", wph.GetProducts)
+	r.Get("/{id}", wph.GetProduct)
+	r.Get("/category/{categoryID}", wph.GetProductsByCategoryId)
+
+	r.Post("/", wph.CreateProduct)
+
+	return r
+}

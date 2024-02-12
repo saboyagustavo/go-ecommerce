@@ -48,7 +48,12 @@ func main() {
 	productService := service.NewProductService(productDB)
 	webProductHandler := webserver.NewWebProductHandler(productService)
 
-	r := webserver.NewRouter(webCategoryHandler, webProductHandler)
+	handlers := map[string]http.Handler{
+		"/category": webCategoryHandler.GetRouter(),
+		"/product":  webProductHandler.GetRouter(),
+	}
+
+	r := webserver.NewRouter(handlers)
 
 	fmt.Println("·•.▪▐ SERVER IS UP AND RUNNING ON PORT", apiPort, "▐ ▪.•·")
 	http.ListenAndServe(":"+apiPort, r)
