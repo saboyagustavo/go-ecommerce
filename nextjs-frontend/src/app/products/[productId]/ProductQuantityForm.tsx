@@ -4,10 +4,11 @@ import { Product } from '@/models';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Button, Divider, Slider, Typography } from '@mui/material';
 import { SettingsSuggest as SettingsIcon, ShoppingCart as CartIcon } from '@mui/icons-material';
 import { Total } from '@/components/Total/total';
+import { addToCartAction } from '@/server-actions/cart.action';
 
 const schema = yup
 	.object({
@@ -21,7 +22,7 @@ export function ProductQuantityForm({ product }: { product: Product }) {
 		resolver: yupResolver(schema),
 	});
 
-	const [total, setTotal] = useState(product.price * getValues()['quantity']);
+	const [total, setTotal] = useState(product.price);
 
 	useEffect(() => {
 		const subscription = watch((value, { name, type }) => {
@@ -32,7 +33,7 @@ export function ProductQuantityForm({ product }: { product: Product }) {
 	}, [watch, product, getValues]);
 
 	return (
-		<Box component='form' sx={{ p: 1 }} action={() => console.log('when submited, add to cart')}>
+		<Box component='form' sx={{ p: 1 }} action={addToCartAction}>
 			<Box
 				sx={{
 					display: 'flex',
@@ -56,13 +57,8 @@ export function ProductQuantityForm({ product }: { product: Product }) {
 				</Box>
 			</Box>
 
+			<input type='hidden' value={product.id} {...register('product_id')} />
 
-      <input
-        type="hidden"
-        value={product.id}
-        {...register("product_id")}
-      />
-      
 			<Controller
 				name='quantity'
 				control={control}
@@ -85,16 +81,17 @@ export function ProductQuantityForm({ product }: { product: Product }) {
 
 			<Divider sx={{ mt: 2 }} />
 
-			<Box 
-        sx={{
-          display: 'flex',
-          justifyContent: 'end',
-          mt: 2
-        }}>
-          <Button type="submit" sx={{mt: 3}} startIcon={<CartIcon/>}>
-            Add to cart
-          </Button>
-      </Box>
+			<Box
+				sx={{
+					display: 'flex',
+					justifyContent: 'end',
+					mt: 2,
+				}}
+			>
+				<Button type='submit' sx={{ mt: 3 }} startIcon={<CartIcon />}>
+					Add to cart
+				</Button>
+			</Box>
 		</Box>
 	);
 }

@@ -1,5 +1,7 @@
 import { Total } from '@/components/Total/total';
-import { Product } from '@/models';
+import { removeFromCartAction } from '@/server-actions/cart.action';
+import { CartServiceFactory } from '@/services/cart.service';
+import { ProductService } from '@/services/product.service';
 import { ShoppingCart as CartIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {
 	Avatar,
@@ -16,42 +18,12 @@ import {
 import Grid2 from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
-const products: Product[] = [
-	{
-		id: '0product-1random-2uuid-3generated',
-		name: 'Some product',
-		description: 'Some product description',
-		price: 175,
-		image_url: 'https://source.unsplash.com/random?product',
-		category_id: '0category-1random-2uuid-3generated',
-	},
-	{
-		id: '1product-2random-3uuid-4generated',
-		name: 'Some product',
-		description: 'Some product description',
-		price: 985,
-		image_url: 'https://source.unsplash.com/random?product',
-		category_id: '1category-2random-3uuid-4generated',
-	},
-];
+async function CartPage() {
+	const cartService = CartServiceFactory.create();
+	const productService = new ProductService();
+	const cart = cartService.getCart();
+	const products = await productService.getProductsByIds(cart.items.map(item => item.product_id));
 
-const cart = {
-	items: [
-		{
-			product_id: '1product-2random-3uuid-4generated',
-			quantity: 2,
-			total: 1970,
-		},
-		{
-			product_id: '0product-1random-2uuid-3generated',
-			quantity: 4,
-			total: 700,
-		},
-	],
-	total: 2670,
-};
-
-function CartPage() {
 	return (
 		<Box>
 			<Typography variant='h3'>
@@ -65,7 +37,14 @@ function CartPage() {
 
 							return (
 								<React.Fragment key={index}>
-									<ListItem sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start', mt: 3 }}>
+									<ListItem
+										sx={{
+											display: 'flex',
+											alignItems: 'center',
+											justifyContent: 'start',
+											mt: 3,
+										}}
+									>
 										<ListItemAvatar>
 											<Avatar src={product.image_url} />
 										</ListItemAvatar>
@@ -94,7 +73,8 @@ function CartPage() {
 									</ListItem>
 
 									<ListItem sx={{ display: 'flex', justifyContent: 'end', p: 0 }}>
-										<form>
+										<form action={removeFromCartAction}>
+											<input type='hidden' name={'product_id'} value={product.id} />
 											<input type='hidden' name='index' value={index} />
 											<Button color='error' startIcon={<DeleteIcon />} type='submit'>
 												Remove
