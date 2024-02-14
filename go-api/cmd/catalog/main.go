@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"net/http"
@@ -16,6 +17,9 @@ import (
 )
 
 var apiPort string
+var dbSource string
+var mongoConnectionURI string
+var mongoDBName string
 
 func init() {
 	loadEnv()
@@ -30,15 +34,25 @@ func loadEnv() {
 
 	baseURL := os.Getenv("API_BASE_URL")
 	apiPort = os.Getenv("API_PORT")
+	dbSource = os.Getenv("DB_SOURCE")
+
+	mongoConnectionURI = os.Getenv("MONGO_CONNECTION_URI")
+	mongoDBName = os.Getenv("MONGO_DB_NAME")
 	entity.UseBaseURL(baseURL)
 }
 
 func main() {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/go-api-db")
+	db, err := sql.Open("mysql", dbSource)
 	if err != nil {
 		panic(err.Error())
 	}
 	defer db.Close()
+
+	imageDB := database.NewImageDB(mongoConnectionURI, mongoDBName)
+	defer imageDB.GetClient().Disconnect(context.Background())
+
+	imageService := service.NewImageService(imageDB)
+	webImageHandler := webserver.NewWebImageHandler(imageService)
 
 	categoryDB := database.NewCategoryDB(db)
 	categoryService := service.NewCategoryService(categoryDB)
@@ -46,11 +60,12 @@ func main() {
 
 	productDB := database.NewProductDB(db)
 	productService := service.NewProductService(productDB)
-	webProductHandler := webserver.NewWebProductHandler(productService)
+	webProductHandler := webserver.NewWebProductHandler(productService, webImageHandler)
 
 	handlers := map[string]http.Handler{
 		"/category": webCategoryHandler.GetRouter(),
 		"/product":  webProductHandler.GetRouter(),
+		"/image":    webImageHandler.GetRouter(),
 	}
 
 	r := webserver.NewRouter(handlers)

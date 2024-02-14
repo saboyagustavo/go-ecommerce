@@ -3,6 +3,7 @@ package webserver
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 
@@ -12,10 +13,14 @@ import (
 
 type WebProductHandler struct {
 	ProductService *service.ProductService
+	ImageHandler   *WebImageHandler
 }
 
-func NewWebProductHandler(productService *service.ProductService) *WebProductHandler {
-	return &WebProductHandler{ProductService: productService}
+func NewWebProductHandler(productService *service.ProductService, imageHandler *WebImageHandler) *WebProductHandler {
+	return &WebProductHandler{
+		ProductService: productService,
+		ImageHandler:   imageHandler,
+	}
 }
 
 func (wph *WebProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
@@ -62,23 +67,43 @@ func (wph *WebProductHandler) GetProductsByCategoryId(w http.ResponseWriter, r *
 }
 
 func (wph *WebProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
-	var product entity.Product
-
-	err := json.NewDecoder(r.Body).Decode(&product)
+	// Upload image and get imageID
+	imageID, err := wph.ImageHandler.UploadImage(w, r)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
+	pName := r.FormValue("productName")
+	pDescription := r.FormValue("productDescription")
+	pCategoryId := r.FormValue("productCategoryId")
+	pPriceStr := r.FormValue("productPrice")
+
+	pPrice, err := strconv.ParseFloat(pPriceStr, 64)
+	if err != nil {
+		http.Error(w, "invalid price format", http.StatusBadRequest)
+		return
+	}
+
+	if pName == "" || pDescription == "" || pCategoryId == "" {
+		http.Error(w, "name, description, and categoryId are required", http.StatusBadRequest)
+		return
+	}
+
+	var product entity.Product
+	product.SetImageURL(imageID)
+
 	result, err := wph.ProductService.CreateProduct(
-		product.Name,
-		product.Description,
-		product.CategoryID,
+		pName,
+		pDescription,
+		pCategoryId,
 		product.ImageURL,
-		product.Price,
+		pPrice,
 	)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	json.NewEncoder(w).Encode(result)
