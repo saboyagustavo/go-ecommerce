@@ -1,5 +1,21 @@
 version: "3"
 services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: catalog-api
+    restart: always
+    ports:
+      - "8888:8888"
+    env_file:
+      - ./.env
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      mongo-db:
+        condition: service_healthy
+
   mysql-db:
     image: mysql:8.0.30-debian
     container_name: mysql-db

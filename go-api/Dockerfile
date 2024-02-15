@@ -14,6 +14,4 @@ COPY --from=build /go/catalog /catalog
 
 COPY .env .env 
 
-COPY internal/static/images internal/static
-
 CMD ["/catalog"]
