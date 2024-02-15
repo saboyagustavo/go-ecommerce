@@ -39,7 +39,7 @@ services:
       - .docker/mongo:/data/db
       - ./db/mongo-entrypoint:/docker-entrypoint-initdb.d/
     healthcheck: 
-      test: ["CMD-SHELL", "echo 'db.runCommand({find:\"$MONGO_DB_NAME.$MONGO_USER\"}).ok' | mongosh --authenticationDatabase admin --host localhost -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD admin --quiet | grep -q 1"]
+      test: ["CMD-SHELL", "echo 'db.runCommand({find:\"$MONGO_DB_NAME.$MONGO_USERNAME\"}).ok' | mongosh --authenticationDatabase admin --host localhost -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD admin --quiet | grep -q 1"]
       interval: 10s
       timeout: 30s 
       retries: 5
