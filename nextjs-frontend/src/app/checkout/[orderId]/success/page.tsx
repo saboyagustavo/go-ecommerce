@@ -1,45 +1,11 @@
 import { Total } from '@/components/Total/total';
-import { Order, OrderStatus } from '@/models';
+import { OrderServiceFactory } from '@/services/order.service';
 import { Check as CheckIcon } from '@mui/icons-material';
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2';
 
-const order: Order = {
-	id: 'order-12345',
-	total: 25.99,
-	status: OrderStatus.PENDING,
-	items: [
-		{
-			id: 'item-1',
-			quantity: 1,
-			price: 19.99,
-			product: {
-				id: '0product-1random-2uuid-3generated',
-				name: 'Some product',
-				description: 'Some product description',
-				price: 175,
-				image_url: 'https://source.unsplash.com/random?product',
-				category_id: '0category-1random-2uuid-3generated',
-			},
-		},
-		{
-			id: 'item-2',
-			quantity: 1,
-			price: 5.99,
-			product: {
-				id: '1product-2random-3uuid-4generated',
-				name: 'Some product',
-				description: 'Some product description',
-				price: 985,
-				image_url: 'https://source.unsplash.com/random?product',
-				category_id: '1category-2random-3uuid-4generated',
-			},
-		},
-	],
-	created_at: '2024-02-07T13:01:00.000Z',
-};
-
-function CheckoutSuccessPage({ params }: { params: { orderId: string } }) {
+async function CheckoutSuccessPage({ params }: { params: { orderId: string } }) {
+	const order = await OrderServiceFactory.create().getOrder(params.orderId);
   return (
     <Box>
       <Grid2 container spacing={2}>
